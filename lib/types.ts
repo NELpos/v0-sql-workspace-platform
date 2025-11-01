@@ -61,3 +61,17 @@ export interface Workspace {
   activeTabId: string | null
   fileContent: Record<string, string>
 }
+
+// Artifact types for Claude-like interface
+export interface Artifact {
+  id: string
+  type: "markdown" | "python" | "json" | "sql" | "html"
+  title: string
+  summary: string
+  content: string
+  language?: string
+}
+
+export interface ChatMessageWithArtifacts extends ChatMessage {
+  artifacts?: Artifact[]
+}
