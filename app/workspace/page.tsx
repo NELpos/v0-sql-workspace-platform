@@ -873,33 +873,7 @@ export default function WorkspacePage() {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-background text-foreground">
-      <header className="flex h-12 items-center justify-between border-b border-border bg-card px-4">
-        <div className="flex items-center gap-3">
-          <Briefcase className="h-5 w-5 text-primary" />
-          <h1 className="text-sm font-semibold">Workspace</h1>
-          <WorkspaceSelector
-            workspaces={workspaces.map((w) => ({ id: w.id, name: w.name }))}
-            currentWorkspaceId={currentWorkspaceId}
-            onWorkspaceChange={handleWorkspaceChange}
-            onAddWorkspace={handleAddWorkspace}
-            onDeleteWorkspace={handleDeleteWorkspace}
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsAiPanelOpen(!isAiPanelOpen)}
-            title={isAiPanelOpen ? "Hide AI Assistant" : "Show AI Assistant"}
-          >
-            <Sparkles className="h-4 w-4" />
-          </Button>
-          <span className="text-xs text-muted-foreground">Snowflake</span>
-          <div className="h-2 w-2 rounded-full bg-green-500" />
-        </div>
-      </header>
-
+    <div className="flex h-full bg-background text-foreground">
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 flex-shrink-0 border-r border-border bg-card overflow-hidden">
           <ExplorerTabs
@@ -917,11 +891,37 @@ export default function WorkspacePage() {
             onAddFileToFolder={handleAddFileToFolder}
             clipboardItem={clipboardItem ? { id: clipboardItem.id, operation: clipboardItem.operation } : null}
             onImportSchema={handleImportSchema}
-            newFileId={newFileId} // Pass newFileId to trigger rename mode
+            newFileId={newFileId}
           />
         </aside>
 
         <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background">
+          <header className="flex h-12 items-center justify-between border-b border-border bg-card px-4">
+            <div className="flex items-center gap-3">
+              <Briefcase className="h-5 w-5 text-primary" />
+              <h1 className="text-sm font-semibold">Workspace</h1>
+              <WorkspaceSelector
+                workspaces={workspaces.map((w) => ({ id: w.id, name: w.name }))}
+                currentWorkspaceId={currentWorkspaceId}
+                onWorkspaceChange={handleWorkspaceChange}
+                onAddWorkspace={handleAddWorkspace}
+                onDeleteWorkspace={handleDeleteWorkspace}
+              />
+            </div>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAiPanelOpen(!isAiPanelOpen)}
+                title={isAiPanelOpen ? "Hide AI Assistant" : "Show AI Assistant"}
+              >
+                <Sparkles className="h-4 w-4" />
+              </Button>
+              <span className="text-xs text-muted-foreground">Snowflake</span>
+              <div className="h-2 w-2 rounded-full bg-green-500" />
+            </div>
+          </header>
+
           <div className="flex min-h-0 flex-1 overflow-hidden">
             {panes.map((pane, index) => {
               const activeTab = pane.tabs.find((tab) => tab.id === pane.activeTabId)
@@ -949,7 +949,7 @@ export default function WorkspacePage() {
                     onTabClose={(tabId) => handleTabClose(pane.id, tabId)}
                     onRunQuery={isSqlFile ? () => handleRunQuery(pane.id) : undefined}
                     onSplitView={panes.length < 3 ? handleSplitView : undefined}
-                    showRunButton={isSqlFile} // Only show Run button for SQL files
+                    showRunButton={isSqlFile}
                   />
                   {queryStatus !== "idle" && isActive && isSqlFile && (
                     <div className="border-b border-border p-2">
