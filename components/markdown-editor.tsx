@@ -17,7 +17,7 @@ interface MarkdownEditorProps {
 type ViewMode = "edit" | "preview" | "split"
 
 export function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>("split")
+  const [viewMode, setViewMode] = useState<ViewMode>("edit")
 
   const handleChange = useCallback(
     (val: string) => {

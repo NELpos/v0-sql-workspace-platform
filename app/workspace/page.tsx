@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Briefcase, Sparkles, Table2, X } from "lucide-react"
+import { Briefcase, Sparkles, Table2, X, ChevronDown, ChevronUp } from "lucide-react"
 import type { FileNode } from "@/components/file-tree"
 import { EditorTabs, type EditorTab } from "@/components/editor-tabs"
 import { SqlEditor } from "@/components/sql-editor"
@@ -872,8 +872,10 @@ export default function WorkspacePage() {
     }
   }
 
+  const [isBottomPanelCollapsed, setIsBottomPanelCollapsed] = useState(false)
+
   return (
-    <div className="flex h-full bg-background text-foreground">
+    <div className="flex h-screen flex-col bg-background">
       <div className="flex flex-1 overflow-hidden">
         <aside className="w-64 flex-shrink-0 border-r border-border bg-card overflow-hidden">
           <ExplorerTabs
@@ -1002,29 +1004,38 @@ export default function WorkspacePage() {
             })}
           </div>
 
-          {(() => {
-            const activePane = panes.find((p) => p.id === activePaneId)
-            const activeTab = activePane?.tabs.find((tab) => tab.id === activePane.activeTabId)
-            const isSqlFile = activeTab?.name.endsWith(".sql")
-
-            return isSqlFile ? (
-              <div className="flex h-64 flex-shrink-0 flex-col border-t border-border bg-card">
-                <div className="flex items-center gap-2 border-b border-border px-4 py-2">
-                  <Table2 className="h-4 w-4" />
-                  <h2 className="text-sm font-semibold">Query Results</h2>
-                </div>
-                <div className="flex-1 overflow-hidden">
-                  {queryResult ? (
-                    <ResultsTable result={queryResult} />
-                  ) : (
-                    <div className="flex h-full items-center justify-center p-4">
-                      <p className="text-sm text-muted-foreground">Run a query to see results</p>
-                    </div>
-                  )}
-                </div>
+          {/* Bottom Panel - Query Results */}
+          <div
+            className={`flex flex-shrink-0 flex-col border-t border-border bg-card transition-all duration-200 ${
+              isBottomPanelCollapsed ? "h-10" : "h-64"
+            }`}
+          >
+            <div className="flex items-center justify-between border-b border-border px-4 py-2">
+              <div className="flex items-center gap-2">
+                <Table2 className="h-4 w-4" />
+                <h2 className="text-sm font-semibold">Query Results</h2>
               </div>
-            ) : null
-          })()}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsBottomPanelCollapsed(!isBottomPanelCollapsed)}
+                className="h-6 w-6 p-0"
+              >
+                {isBottomPanelCollapsed ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              </Button>
+            </div>
+            {!isBottomPanelCollapsed && (
+              <div className="flex-1 overflow-auto p-4">
+                {queryResult ? (
+                  <ResultsTable result={queryResult} />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                    No query results to display
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </main>
 
         {isAiPanelOpen && (
